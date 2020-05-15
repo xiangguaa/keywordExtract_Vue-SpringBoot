@@ -13,7 +13,7 @@ Vue.use(ElementUI);
 // Vue.component(Select.name, Select);
 // import 'element-ui/lib/theme-chalk/index.css';
 
-
+import common from "./common/common.js";
 
 
 Vue.config.productionTip = false
@@ -22,5 +22,30 @@ Vue.prototype.$http = axios
 
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
+  created() {
+    router.beforeEach((to, from, next) => {
+      console.log(to)
+      console.log(from)
+      // console.log(next)
+      if (to.matched.some(record => record.meta.requiresAuth)) {
+        // this route requires auth, check if logged in
+        // if not, redirect to login page.
+        if (!common.util.getCookie("name")) {
+          // console.error("NOT LOGIN")
+          next({
+            path: '/login',
+            query: { redirect: to.fullPath }
+          })
+        } else {
+          // console.error("LOGIN")
+          next()
+        }
+      } else {
+        // console.error("NOT AUTH")
+        next() // 确保一定要调用 next()
+      }
+    })
+
+  }
 }).$mount('#app')

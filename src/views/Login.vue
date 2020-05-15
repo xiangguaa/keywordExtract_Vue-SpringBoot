@@ -15,11 +15,11 @@
                <div class="login-input">
                     <div class="username input-area">
                         <img class="login-logo" src="../assets/login-logo.png" alt="">
-                        <input class="username-input" v-model="username" placeholder="请输入手机号/邮箱" name="username" type="text">
+                        <input class="username-input" v-model="username" placeholder="请输入用户名" name="username" type="text">
                     </div>
                     <div class="passwd input-area" v-if="loginOrSignup=='signup'">
                         <img class="login-logo" src="../assets/login-logo.png" alt="">
-                        <input class="passwd-input" v-model="nickName" placeholder="请输入用户昵称" name="nickName" type="password" autocomplete="off" id="">
+                        <input class="passwd-input" v-model="nickName" placeholder="请输入邮箱(账号找回)" name="nickName" type="email" autocomplete="off" id="">
                     </div>
                     <div class="passwd input-area">
                         <img class="login-logo" src="../assets/login-logo.png" alt="">
@@ -33,8 +33,8 @@
          
 
           <div class="login-options">
-              <a class="options-help" href="sdfa">帮助手册</a>
-              <a class="options-forget" href="sdfa">找回密码</a>
+              <a class="options-help" href="#">@装饰@</a>
+              <a class="options-forget" href="#">#装饰#</a>
               <a class="options-signup" href="#" @click="switchSignPage()">{{switchModeText}}</a>
           </div>
       </div>
@@ -149,12 +149,12 @@ export default {
                             type: 'success'
                     });  
                     break;
-                // case 200:
-                //     msg({
-                //             message: '注册成功呢！',
-                //             type: 'success'
-                //     });  
-                //     break;
+                case 103:
+                    msg({
+                            message: '用户已登录！',
+                            type: 'success'
+                    });  
+                    break;
                 case 201:
                     msg({
                             message: '用户名已存在！',
@@ -185,7 +185,6 @@ export default {
 
   },
   created:function(){
-      console.log("created")
       this.isPromptVisable = "hidden";
 
       console.log(common.util.getCookie("name"))
@@ -193,7 +192,12 @@ export default {
     // 此处需要增加页面访问控制权限？
     // ？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
       if(common.util.getCookie("name")){
-          this.$router.replace("Extract");
+          this.showToast(103,this.$message);
+          setTimeout(() => {
+            this.$router.replace("Extract");    
+          }, 1000);
+          
+          
       }
   }
 
@@ -201,10 +205,12 @@ export default {
 </script>
 <style scoped>
     .login{
-        height: 700px;
-        padding-top: 50px;
+        /* height: 550px; */
+        width: 100%;
+        height: 100%;
         background-color: #fc5563;
-        
+        display: flex;
+        align-items: center;
     }
     .login-box{
         background-color: #fcfefe;
