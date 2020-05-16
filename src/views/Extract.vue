@@ -19,13 +19,20 @@
                     <label class="label-part" for="conclusion">结论</label>
                     <input class="input-part" v-model="conclusion" placeholder="请输入结论内容(可选)" type="text" name="conclusion" id="title">
                 </div>
+                
                 <div class="others input-cell">
                     <label class="label-part" for="others">其他</label>
                     <textarea class="input-part" v-model="others"  placeholder="请输入其他部分(可选)" type="text" name="others" id="others"></textarea>
                 </div>
+                <div class="weight input-cell">
+                    <label class="label-weight" for="weight">权重</label>
+                    <input class="input-part" v-model="weight" required placeholder="请按照[标题、导语、正文、结论、其他]的顺序输入各部分权重字符串(默认为11111)。未填写部分权重请设为1。" type="text" name="weight" id="weight">
+                </div>
+                <p class="weight-suggest">请按照[标题、导语、正文、结论、其他]的顺序输入各部分权重字符串(默认为11111)。未填写部分权重请设为1。</p>
                 <div class="submit">
                     <input @click="submit()" class="btn-submit" type="submit" value="提交">
                 </div>
+                
                 <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
             </form>
         </div>
@@ -49,6 +56,7 @@ export default {
           main:"",
           conclusion:"",
           others:"",
+          weight:"11111",
 
           // keywords
           keywords:[],
@@ -64,9 +72,32 @@ export default {
           console.log(this.lead)
           console.log(this.main)
           console.log(this.conclusion)
-          console.log(this.others)
+          console.log(this.others=="")
+          console.log(this.weight)
+          if(this.main == "" || this.weight==""){
+              this.$message({
+                  message:"【正文】/【权重】部分为必填内容",
+                  type:"error"
+              })
+          }else{
+            // 向数据库查询是否存在用户密码对应关系，存在则返回cookie值
+            this.$http({
+                url: "extract?main="+this.main+"&lead="+this.lead+"&weight="+this.weight+"&title="+this.title+"&others="+this.others,
+                // url: "/login?name=爱人二位"+"&pwd="+this.passwd,
+                method: "get",
+                crossdomain: true,
+                }).then(res => {
+                    console.log("res : ",res.data); 
+                    this.keywords = res.data
+            });
+
+          }
+
+          
+
+
         // 接收返回结果，并传递给keywords
-        this.keywords = [['疫情', 7.54729319353285], ['中俄', 5.97738375145], ['政治化', 5.53373215395], ['论调', 4.994327323275], ['驳斥', 4.67340038019], ['齐声', 4.27204568865], ['抗疫', 2.8766217539259413], ['俄罗斯', 2.2395114189143657], ['俄方', 2.1307139973873976], ['俄中', 1.5593175003782607], ['中国', 1.5434895539495055], ['团结合作', 1.4785732558043478], ['相互支持', 1.451489860395652], ['普京', 1.3895768411076794], ['克里姆林宫', 1.3570656639782608], ['连贯', 1.2399428474739131], ['交流', 1.1055882127037597], ['赞赏', 1.080509550562174], ['并称', 1.0595250428804348], ['经验', 0.9842762482003293], ['合作', 0.9618232171483657], ['表示', 0.8722119455169952], ['习近平', 0.5930073097253846], ['16', 0.40871000009914527], ['通电话', 0.3517866577538462], ['报道', 0.32668928773111106], ['新冠', 0.2554437500619658], ['莫斯科', 0.24713315235931624]]
+        // this.keywords = [['疫情', 7.54729319353285], ['中俄', 5.97738375145], ['政治化', 5.53373215395], ['论调', 4.994327323275], ['驳斥', 4.67340038019], ['齐声', 4.27204568865], ['抗疫', 2.8766217539259413], ['俄罗斯', 2.2395114189143657], ['俄方', 2.1307139973873976], ['俄中', 1.5593175003782607], ['中国', 1.5434895539495055], ['团结合作', 1.4785732558043478], ['相互支持', 1.451489860395652], ['普京', 1.3895768411076794], ['克里姆林宫', 1.3570656639782608], ['连贯', 1.2399428474739131], ['交流', 1.1055882127037597], ['赞赏', 1.080509550562174], ['并称', 1.0595250428804348], ['经验', 0.9842762482003293], ['合作', 0.9618232171483657], ['表示', 0.8722119455169952], ['习近平', 0.5930073097253846], ['16', 0.40871000009914527], ['通电话', 0.3517866577538462], ['报道', 0.32668928773111106], ['新冠', 0.2554437500619658], ['莫斯科', 0.24713315235931624]]
 
       }
 
@@ -187,6 +218,11 @@ export default {
         margin: 5px;
         color: rgb(63, 25, 0);
         font-weight: 700px;
+    }
+
+    .weight-suggest{
+        font-size: 12px;
+        color: gray;
     }
     
     
