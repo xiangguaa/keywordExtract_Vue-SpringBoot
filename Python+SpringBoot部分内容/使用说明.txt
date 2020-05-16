@@ -1,0 +1,18 @@
+首先运行python文件夹中的api
+然后运行spirngboot中的内容。
+最后使用npm install + npm run serve运行Vue文件夹中的项目。
+
+
+-----mysql数据库表
+用户名：niudai
+密码： niudai
+数据库名称：springdb
+表名：user
+表结构：
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| id       | int(4)      | NO   | PRI | NULL    | auto_increment |
+| username | varchar(10) | YES  |     | NULL    |                |
+| password | varchar(10) | YES  |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
